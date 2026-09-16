@@ -65,6 +65,28 @@ class InventorySyncTest {
         val byAlt = dao.findItemByBarcode("PEP-12PK-CAN")
         assertNotNull(byAlt)
         assertEquals("Pepsi 12-Pack Cans", byAlt?.itemName)
+
+        // Verify exact match preserves leading zeroes:
+        // "012000001291" should match, but stripping or adding leading zeros must NOT match an item with a different literal UPC
+        val itemWithTwoZeros = InventoryItem(
+            upc = "001234567890",
+            itemName = "Item Two Leading Zeros",
+            itemNumber = "ITM-002Z",
+            unitOfMeasure = "EA",
+            onHandQty = 5.0,
+            activePrice = 3.50,
+            reorderPoint = 2.0
+        )
+        dao.insertItem(itemWithTwoZeros)
+
+        // Lookup with exact two zeros matches
+        val byExactZeros = dao.findItemByBarcode("001234567890")
+        assertNotNull(byExactZeros)
+        assertEquals("Item Two Leading Zeros", byExactZeros?.itemName)
+
+        // Lookup with stripped zero does NOT match itemWithTwoZeros because UPC is looked up as read
+        val byStrippedZero = dao.findItemByBarcode("1234567890")
+        assertEquals(null, byStrippedZero)
     }
 
     @Test

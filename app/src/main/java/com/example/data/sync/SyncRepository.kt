@@ -109,40 +109,15 @@ class SyncRepository(
         val clean = query.trim()
         if (clean.isBlank()) return@withContext null
 
-        // 1. Direct match in DB
-        var found = dao.findItemByBarcode(clean)
+        // 1. Direct match in DB on exact barcode string (preserving all leading zeros)
+        val found = dao.findItemByBarcode(clean)
         if (found != null) return@withContext found
 
-        // 2. Normalized leading zeros (e.g. 012345678901 vs 12345678901)
-        val stripped = clean.trimStart('0')
-        if (stripped.isNotEmpty() && stripped != clean) {
-            found = dao.findItemByBarcode(stripped)
-            if (found != null) return@withContext found
-        }
-
-        // 3. Padded versions (e.g. Excel dropped leading zero: 11 digits -> 12 digit UPC-A or 13 digit EAN-13)
-        if (clean.all { it.isDigit() }) {
-            if (clean.length == 11) {
-                found = dao.findItemByBarcode("0$clean")
-                if (found != null) return@withContext found
-            }
-            if (clean.length == 12) {
-                found = dao.findItemByBarcode("0$clean")
-                if (found != null) return@withContext found
-            }
-            if (clean.length == 13 && clean.startsWith("0")) {
-                found = dao.findItemByBarcode(clean.substring(1))
-                if (found != null) return@withContext found
-            }
-        }
-
-        // 4. Memory scan: Exact match on UPC or Alternate Lookup (case-insensitive)
+        // 2. Memory scan: Exact match on UPC or Alternate Lookup (case-insensitive, exact length & leading zeros)
         val all = dao.getAllItems().first()
         return@withContext all.firstOrNull { item ->
             item.upc.trim().equals(clean, ignoreCase = true) ||
-            item.alternateLookup.trim().equals(clean, ignoreCase = true) ||
-            (item.upc.isNotBlank() && stripped.isNotEmpty() && item.upc.trim().trimStart('0') == stripped) ||
-            (item.alternateLookup.isNotBlank() && stripped.isNotEmpty() && item.alternateLookup.trim().trimStart('0') == stripped)
+            item.alternateLookup.trim().equals(clean, ignoreCase = true)
         }
     }
 
