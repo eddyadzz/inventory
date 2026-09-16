@@ -183,7 +183,7 @@ class InventoryViewModel(
                 val alertMsg = if (newReorderPoint > 0.0 && newQty <= newReorderPoint) {
                     "⚠️ LOW STOCK ALERT: ${item.itemName} (${newQty.toInt()}) reached Reorder Point (${newReorderPoint.toInt()})!"
                 } else {
-                    "Updated ${item.itemName} (Stock: $newQty, Price: $$newPrice)"
+                    "Updated ${item.itemName} (Stock: $newQty, Price: MVR $newPrice)"
                 }
                 _eventFlow.emit(UiEvent.ShowToast(alertMsg))
             }.onFailure { err ->

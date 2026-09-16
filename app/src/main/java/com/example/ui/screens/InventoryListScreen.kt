@@ -492,7 +492,7 @@ fun InventoryItemCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "$${String.format(java.util.Locale.US, "%.2f", item.activePrice)}",
+                        text = "MVR ${String.format(java.util.Locale.US, "%.2f", item.activePrice)}",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = EmeraldSuccess

@@ -361,9 +361,9 @@ object XlsxManager {
             val name = get("itemName")
             if (upc.isBlank() && name.isBlank()) continue
 
-            val qtyStr = get("onHandQty").replace(",", "").replace("$", "")
-            val priceStr = get("activePrice").replace(",", "").replace("$", "")
-            val ropStr = get("reorderPoint").replace(",", "").replace("$", "")
+            val qtyStr = get("onHandQty").replace(",", "").replace("$", "").replace("MVR", "").replace("mvr", "")
+            val priceStr = get("activePrice").replace(",", "").replace("$", "").replace("MVR", "").replace("mvr", "")
+            val ropStr = get("reorderPoint").replace(",", "").replace("$", "").replace("MVR", "").replace("mvr", "")
 
             items.add(
                 InventoryItem(

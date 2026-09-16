@@ -137,7 +137,7 @@ fun NewItemDialog(
                     OutlinedTextField(
                         value = activePrice,
                         onValueChange = { activePrice = it },
-                        label = { Text("Active Price ($)") },
+                        label = { Text("Active Price (MVR)") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.weight(1f),
                         singleLine = true

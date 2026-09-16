@@ -334,7 +334,7 @@ fun ItemDetailBottomSheet(
 
             // Price ("Active Price") Section
             Text(
-                text = "Active Price ($)",
+                text = "Active Price (MVR)",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -351,7 +351,7 @@ fun ItemDetailBottomSheet(
                     .fillMaxWidth()
                     .testTag("active_price_input"),
                 label = { Text("Active Price on Sheet") },
-                prefix = { Text("$ ", fontWeight = FontWeight.Bold) },
+                prefix = { Text("MVR ", fontWeight = FontWeight.Bold) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true
             )

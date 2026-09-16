@@ -294,7 +294,7 @@ fun TransactionHistoryCard(tx: TransactionRecord) {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         HistoryItemField("Dept", tx.department.ifBlank { "General" })
-                        HistoryItemField("Active Price", "$${String.format(java.util.Locale.US, "%.2f", tx.activePrice)}")
+                        HistoryItemField("Active Price", "MVR ${String.format(java.util.Locale.US, "%.2f", tx.activePrice)}")
                         HistoryItemField("Expiry", tx.expiry.ifBlank { "N/A" })
                     }
                 }
