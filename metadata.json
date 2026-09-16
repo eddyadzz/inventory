@@ -1,0 +1,6 @@
+{
+  "name": "Inventory Sync",
+  "description": "Real-time inventory stock and price tracker synced with Google Drive ITEM LIST.xlsx, featuring camera barcode scanner and transaction history log.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
