@@ -10,15 +10,27 @@ plugins {
   alias(libs.plugins.google.services)
 }
 
-// Automatically regenerate debug.keystore from repository base64 if missing on local developer machines
+// Automatically ensure debug.keystore exists on local developer machines
 val debugKeystoreFile = file("${rootDir}/debug.keystore")
 val base64KeystoreFile = file("${rootDir}/debug.keystore.base64")
-if (!debugKeystoreFile.exists() && base64KeystoreFile.exists()) {
-  try {
-    val decodedBytes = Base64.getDecoder().decode(base64KeystoreFile.readText().trim())
-    debugKeystoreFile.writeBytes(decodedBytes)
-  } catch (e: Exception) {
-    logger.warn("Could not decode debug.keystore.base64: ${e.message}")
+if (!debugKeystoreFile.exists()) {
+  if (base64KeystoreFile.exists()) {
+    try {
+      val decodedBytes = Base64.getDecoder().decode(base64KeystoreFile.readText().trim())
+      debugKeystoreFile.writeBytes(decodedBytes)
+    } catch (e: Exception) {
+      logger.warn("Could not decode debug.keystore.base64: ${e.message}")
+    }
+  }
+  if (!debugKeystoreFile.exists()) {
+    val userHomeAndroidKeystore = file("${System.getProperty("user.home")}/.android/debug.keystore")
+    if (userHomeAndroidKeystore.exists()) {
+      try {
+        userHomeAndroidKeystore.copyTo(debugKeystoreFile, overwrite = true)
+      } catch (e: Exception) {
+        logger.warn("Could not copy user home debug.keystore: ${e.message}")
+      }
+    }
   }
 }
 
