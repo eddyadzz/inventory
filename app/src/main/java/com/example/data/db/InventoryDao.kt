@@ -22,8 +22,8 @@ interface InventoryDao {
         SELECT * FROM inventory_items 
         WHERE upc = :barcode 
            OR alternateLookup = :barcode 
-           OR upc LIKE '%' || :barcode 
-           OR alternateLookup LIKE '%' || :barcode
+           OR (LENGTH(:barcode) >= 8 AND LTRIM(upc, '0') = LTRIM(:barcode, '0'))
+           OR (LENGTH(:barcode) >= 8 AND alternateLookup != '' AND LTRIM(alternateLookup, '0') = LTRIM(:barcode, '0'))
         LIMIT 1
     """)
     suspend fun findItemByBarcode(barcode: String): InventoryItem?

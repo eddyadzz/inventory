@@ -127,6 +127,29 @@ fun CameraPreview(
                             preview,
                             imageAnalysis
                         )
+
+                        // Set a subtle 1.25x zoom so cameras focus sharply without needing to touch packaging
+                        try {
+                            camera?.cameraControl?.setZoomRatio(1.25f)
+                        } catch (e: Exception) {
+                            // Ignored on emulators
+                        }
+
+                        // Tap-to-focus for difficult packaging or reflections
+                        previewView.setOnTouchListener { view, event ->
+                            if (event.action == android.view.MotionEvent.ACTION_UP) {
+                                try {
+                                    val factory = previewView.meteringPointFactory
+                                    val point = factory.createPoint(event.x, event.y)
+                                    val action = androidx.camera.core.FocusMeteringAction.Builder(point).build()
+                                    camera?.cameraControl?.startFocusAndMetering(action)
+                                } catch (e: Exception) {
+                                    Log.w("CameraPreview", "Focus tap error: ${e.message}")
+                                }
+                                view.performClick()
+                            }
+                            true
+                        }
                     } catch (e: Exception) {
                         Log.e("CameraPreview", "Camera initialization failed", e)
                         hasCameraSupport = false

@@ -164,4 +164,21 @@ class InventorySyncTest {
         // reorderPoint is 0.0 -> alert not active unless threshold is configured
         assertEquals(false, zeroThresholdItem.isLowStock)
     }
+
+    @Test
+    fun testBarcodeChecksumAndValidation() {
+        // Valid UPC-A barcodes
+        assertEquals(true, com.example.camera.BarcodeValidator.isValidUpcA("012000001291"))
+        assertEquals(true, com.example.camera.BarcodeValidator.isValidUpcA("049000050103"))
+        assertEquals(true, com.example.camera.BarcodeValidator.isValidUpcA("078742351896"))
+
+        // Partial / Truncated / Corrupted barcodes must be rejected
+        assertEquals(false, com.example.camera.BarcodeValidator.isValidUpcA("01200000129")) // 11 digits
+        assertEquals(false, com.example.camera.BarcodeValidator.isValidUpcA("012000001299")) // wrong checksum
+        assertEquals(false, com.example.camera.BarcodeValidator.isValidUpcA("1291")) // partial slice
+
+        // EAN-13 checksum validation
+        assertEquals(true, com.example.camera.BarcodeValidator.isValidEan13("4006381333931"))
+        assertEquals(false, com.example.camera.BarcodeValidator.isValidEan13("4006381333930")) // wrong check digit
+    }
 }

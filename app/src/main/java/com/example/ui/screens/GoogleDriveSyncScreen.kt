@@ -86,9 +86,10 @@ fun GoogleDriveSyncScreen(
         }
     }
 
-    // SAF Document Create Launcher (creates new ITEM LIST.xlsx on Google Drive)
+    // SAF Document Create Launcher (creates new ITEM LIST.xlsx on Google Drive, Synology Drive, or Local Storage)
+    // Using "*/*" ensures Google Drive DocumentsProvider is NOT filtered out by Android DocumentsUI
     val createDocumentLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        contract = ActivityResultContracts.CreateDocument("*/*")
     ) { uri ->
         if (uri != null) {
             try {
@@ -266,9 +267,44 @@ fun GoogleDriveSyncScreen(
                     ) {
                         Icon(Icons.Default.LinkOff, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Unlink Google Drive File")
+                        Text("Unlink Cloud / Drive File")
                     }
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Cloud & Local Storage Helper Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+            )
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.CloudDone,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Google Drive & Synology Drive Support",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "• Google Drive: In the Android file picker, tap the Menu icon (☰) at the top-left to select your Google Drive account from the side drawer.\n• Synology Drive & Local Storage: Supported directly! Select or create your ITEM LIST.xlsx file in Synology Drive or internal storage.\n• Excel Compatibility: Files are standard .xlsx format, fully readable in Excel, Google Sheets, or LibreOffice.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 18.sp
+                )
             }
         }
 
